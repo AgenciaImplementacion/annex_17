@@ -20,7 +20,7 @@
                                 "graphicName": "circle",
                                 "type": "point",
                                 "strokeColor": "#000",
-                                "pointRadius": 3,
+                                "pointRadius": 2,
                                 "strokeOpacity": 1
                             },
                             {
@@ -53,11 +53,59 @@
                             {
                                 "fontFamily": "sans-serif",
                                 "fontSize": "10px",
-                                "label": "[t_id]",
+                                "label": "[predio]",
                                 "type": "text",
-                                "fontWeight": "bold"
+                                "fontWeight": "bold",
+                                "labelAlign": "cm"
                             }
                         ]},
+                        "version": "2"
+                    },
+                    "type": "geojson"
+                },
+                {
+                    "geoJson": "",
+                    "name": "terrenos",
+                    "style": {
+                        "*": {
+                            "symbolizers": [
+                                {
+                                    "fillColor": "#c6afaf",
+                                    "strokeWidth": 0.4,
+                                    "fillOpacity": 0,
+                                    "type": "polygon",
+                                    "strokeColor": "#9b794e",
+                                    "strokeOpacity": 1
+                                },
+                                {
+                                    "fontFamily": "sans-serif",
+                                    "fontSize": "5px",
+                                    "label": "[predio]",
+                                    "type": "text",
+                                    "labelAlign": "cm"
+                                }
+                            ]
+                        },
+                        "version": "2"
+                    },
+                    "type": "geojson"
+                },
+                {
+                    "geoJson": "",
+                    "name": "construcciones",
+                    "style": {
+                        "*": {
+                            "symbolizers": [
+                                {
+                                    "fillColor": "#f70c00",
+                                    "strokeWidth": 0.4,
+                                    "fillOpacity": 0.4,
+                                    "type": "polygon",
+                                    "strokeColor": "#f70c00",
+                                    "strokeOpacity": 0.4
+                                }
+                            ]
+                        },
                         "version": "2"
                     },
                     "type": "geojson"
@@ -71,6 +119,34 @@
             }
         },
         "criterio_punto_inicial": 2,
-        "overviewMap": {}
+        "overviewMap": {
+          "layers": [{
+              "geoJson": "",
+              "name": "terrenos_all",
+              "style": {
+                  "*": {
+                      "symbolizers": [
+                          {
+                              "fillColor": "#c6afaf",
+                              "strokeWidth": 0.4,
+                              "fillOpacity": 0,
+                              "type": "polygon",
+                              "strokeColor": "#9b794e",
+                              "strokeOpacity": 0.7
+                          },
+                          {
+                              "fontFamily": "sans-serif",
+                              "fontSize": "4px",
+                              "label": "[predio]",
+                              "type": "text",
+                              "labelAlign": "cm"
+                          }
+                      ]
+                  },
+                  "version": "2"
+              },
+              "type": "geojson"
+          }]
+        }
     }
 }

@@ -53,22 +53,7 @@ templates:
                       strokeDashstyle: "solid"
                       strokeWidth: 0.3
                       strokeColor: "#3c3c3c"
-                      strokeOpacity: 0.5      
-            - type: "WMS"
-              imageFormat: "image/png"
-              baseURL: "https://ide.proadmintierra.info/geoserver/ladm_col_2_2_1/wms"
-              customParams: 
-                TRANSPARENT: true
-              layers: ["ladm_col_2_2_1:la_palma_terreno"]
-              styles: ["terreno_no_fill_ppc"]
-              opacity: 1
-            - type: "WMS"
-              imageFormat: "image/png"
-              baseURL: "https://ide.proadmintierra.info/geoserver/ladm_col_2_2_1/wms"
-              customParams: 
-                TRANSPARENT: true
-              layers: ["ladm_col_2_2_1:la_palma_construccion"]
-              opacity: 1
+                      strokeOpacity: 0.5
       overviewOverlayLayers: !staticLayers
         default:
           layers:
@@ -93,14 +78,6 @@ templates:
                       strokeWidth: 0.3
                       strokeColor: "#3c3c3c"
                       strokeOpacity: 0.5
-            - type: "WMS"
-              imageFormat: "image/png"
-              baseURL: "https://ide.proadmintierra.info/geoserver/ladm_col_2_2_1/wms"
-              customParams: 
-                TRANSPARENT: true
-              layers: ["ladm_col_2_2_1:la_palma_terreno"]
-              styles: ["terreno_no_fill_overview_ppc"]
-              opacity: 1
     processors:
     - !addBackgroundLayers
       inputMapper:
