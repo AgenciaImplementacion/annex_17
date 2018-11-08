@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-10-08T09:10:45 -->
+<!-- 2018-10-17T14:43:28 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9a3e59f5-6675-48cf-ad74-9c42b5a5b290">
 	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -12,6 +12,7 @@
 	<parameter name="overviewMapSubReport" class="java.lang.String"/>
 	<parameter name="mapContext1" class="org.mapfish.print.attribute.map.MapfishMapContext"/>
 	<parameter name="criterio_punto_inicial" class="java.lang.Integer"/>
+	<parameter name="datasetName" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT 
   predio.fmi 
@@ -25,12 +26,12 @@
   ,area_calculada
   ,st_x(st_transform(st_centroid(poligono_creado),4326)) as x
   ,st_y(st_transform(st_centroid(poligono_creado),4326)) as y
-  ,replace(replace(encode(hmac(u_espacio_de_nombres,u_local_id, 'md5'),'base64'),'+','-'),'/','_') as codigo
+  ,u_espacio_de_nombres || u_local_id as codigo
 FROM 
-  canutalito_20180829.terreno 
-  LEFT JOIN canutalito_20180829.uebaunit ON terreno.t_id = uebaunit.ue_terreno 
-  LEFT JOIN canutalito_20180829.predio ON predio.t_id = uebaunit.baunit_predio 
-WHERE terreno.t_id =  $P{id}]]>
+  $P!{datasetName}.terreno 
+  LEFT JOIN $P!{datasetName}.uebaunit ON terreno.t_id = uebaunit.ue_terreno 
+  LEFT JOIN $P!{datasetName}.predio ON predio.t_id = uebaunit.baunit_predio 
+WHERE terreno.t_id =  $P{id}  ]]>
 	</queryString>
 	<field name="fmi" class="java.lang.String"/>
 	<field name="nupre" class="java.lang.String"/>
@@ -865,6 +866,9 @@ La vigencia de este certificado será de tres meses, a partir de su fecha de exp
 				<subreportParameter name="criterio_punto_inicial">
 					<subreportParameterExpression><![CDATA[$P{criterio_punto_inicial}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="datasetName">
+					<subreportParameterExpression><![CDATA[$P{datasetName}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["sub_report_neighbors.jasper"]]></subreportExpression>
 			</subreport>
@@ -884,6 +888,9 @@ La vigencia de este certificado será de tres meses, a partir de su fecha de exp
 				</subreportParameter>
 				<subreportParameter name="criterio_punto_inicial">
 					<subreportParameterExpression><![CDATA[$P{criterio_punto_inicial}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="datasetName">
+					<subreportParameterExpression><![CDATA[$P{datasetName}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["sub_report_technical_boundaries.jasper"]]></subreportExpression>
@@ -905,6 +912,9 @@ La vigencia de este certificado será de tres meses, a partir de su fecha de exp
 				<subreportParameter name="criterio_punto_inicial">
 					<subreportParameterExpression><![CDATA[$P{criterio_punto_inicial}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="datasetName">
+					<subreportParameterExpression><![CDATA[$P{datasetName}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["sub_report_coordinates.jasper"]]></subreportExpression>
 			</subreport>
@@ -917,6 +927,9 @@ La vigencia de este certificado será de tres meses, a partir de su fecha de exp
 				</subreportParameter>
 				<subreportParameter name="criterio_punto_inicial">
 					<subreportParameterExpression><![CDATA[$P{criterio_punto_inicial}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="datasetName">
+					<subreportParameterExpression><![CDATA[$P{datasetName}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["sub_report_signatures.jasper"]]></subreportExpression>

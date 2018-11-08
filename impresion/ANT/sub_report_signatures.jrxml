@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2018-10-08T08:59:29 -->
+<!-- 2018-10-17T14:45:17 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_report_coordinates" columnCount="2" printOrder="Horizontal" pageWidth="540" pageHeight="842" columnWidth="270" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="20" uuid="8044c259-bf6b-4072-8923-78bca3eb0308">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ladmcolV221"/>
@@ -26,6 +26,7 @@
 		<defaultValueExpression><![CDATA[66040]]></defaultValueExpression>
 	</parameter>
 	<parameter name="criterio_punto_inicial" class="java.lang.Integer"/>
+	<parameter name="datasetName" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[WITH 
 parametros AS (
@@ -36,7 +37,7 @@ parametros AS (
     true	AS incluir_tipo_derecho --Mostrar el tipo de derecho de cada interesado (booleano)
 ),
 t AS ( --Orienta los vertices del terreno en sentido horario
-	SELECT t_id, ST_ForceRHR(poligono_creado) as poligono_creado FROM canutalito_20180829.terreno AS t, parametros WHERE t.t_id = poligono_t_id
+	SELECT t_id, ST_ForceRHR(poligono_creado) as poligono_creado FROM $P!{datasetName}.terreno AS t, parametros WHERE t.t_id = poligono_t_id
 ),
 --bordes de la extension del poligono
 a AS (
@@ -84,7 +85,7 @@ oeste AS (
 	SELECT t_id, ST_Boundary(poligono_creado) geom FROM t
 )
 ,limite_vecinos as (  --obtiene el limite de los terrenos colindantes, filtrados por bounding box
-	select o.t_id, ST_Boundary(o.poligono_creado) geom from t, canutalito_20180829.terreno o where o.poligono_creado && st_envelope(t.poligono_creado) and t.t_id <> o.t_id
+	select o.t_id, ST_Boundary(o.poligono_creado) geom from t, $P!{datasetName}.terreno o where o.poligono_creado && st_envelope(t.poligono_creado) and t.t_id <> o.t_id
 )
 ,pre_colindancias as ( --inteseccion entre el limite del poligono y los terrenos cercanos, añade la geometria de los limites sin adjacencia
 	SELECT limite_vecinos.t_id, st_intersection(limite_poligono.geom,limite_vecinos.geom) geom  FROM limite_poligono,limite_vecinos where st_intersects(limite_poligono.geom,limite_vecinos.geom) and limite_poligono.t_id <> limite_vecinos.t_id
@@ -223,17 +224,17 @@ oeste AS (
 
 SELECT distinct ( coalesce(primer_nombre,'') || coalesce(' ' || segundo_nombre, '') || coalesce(' ' || primer_apellido, '') || coalesce(' ' || segundo_apellido, '') ) 
 				|| ( coalesce(razon_social, '') )  as nombre
-	,(select dispname from canutalito_20180829.col_interesadodocumentotipo where ilicode = tipo_documento) || ': ' || documento_identidad as documento
+	,(select dispname from $P!{datasetName}.col_interesadodocumentotipo where ilicode = tipo_documento) || ': ' || documento_identidad as documento
   FROM 
 	colindantes
-	LEFT JOIN canutalito_20180829.terreno ON terreno.t_id = colindantes.t_id
-	LEFT JOIN canutalito_20180829.uebaunit ON colindantes.t_id = ue_terreno
-	LEFT JOIN canutalito_20180829.predio ON predio.t_id = baunit_predio
+	LEFT JOIN $P!{datasetName}.terreno ON terreno.t_id = colindantes.t_id
+	LEFT JOIN $P!{datasetName}.uebaunit ON colindantes.t_id = ue_terreno
+	LEFT JOIN $P!{datasetName}.predio ON predio.t_id = baunit_predio
 	LEFT JOIN
   (	
 	--navegar agrupación de interesados
 	SELECT * FROM
-		canutalito_20180829.predio
+		$P!{datasetName}.predio
 		LEFT JOIN
 		(
 			select 
@@ -247,15 +248,15 @@ SELECT distinct ( coalesce(primer_nombre,'') || coalesce(' ' || segundo_nombre, 
 			  ,unidad_predio
 			  ,col_derecho.tipo as tipo_derecho
 			from 
-			  canutalito_20180829.col_derecho
-			  JOIN canutalito_20180829.la_agrupacion_interesados on la_agrupacion_interesados.t_id = interesado_la_agrupacion_interesados 
-			  JOIN canutalito_20180829.miembros on agrupacion = la_agrupacion_interesados.t_id
-			  JOIN canutalito_20180829.col_interesado on col_interesado.t_id = miembros.interesados_col_interesado
+			  $P!{datasetName}.col_derecho
+			  JOIN $P!{datasetName}.la_agrupacion_interesados on la_agrupacion_interesados.t_id = interesado_la_agrupacion_interesados 
+			  JOIN $P!{datasetName}.miembros on agrupacion = la_agrupacion_interesados.t_id
+			  JOIN $P!{datasetName}.col_interesado on col_interesado.t_id = miembros.interesados_col_interesado
 		 ) agrupacion  ON predio.t_id = agrupacion.unidad_predio
 	UNION
 	--navegar agrupación de interesados
 	SELECT * FROM
-		canutalito_20180829.predio
+		$P!{datasetName}.predio
 		LEFT JOIN
 		(
 			select 			
@@ -269,8 +270,8 @@ SELECT distinct ( coalesce(primer_nombre,'') || coalesce(' ' || segundo_nombre, 
 			  ,unidad_predio
 			  ,col_derecho.tipo as tipo_derecho
 			from 
-			  canutalito_20180829.col_derecho
-			  JOIN canutalito_20180829.col_interesado on col_interesado.t_id =interesado_col_interesado
+			  $P!{datasetName}.col_derecho
+			  JOIN $P!{datasetName}.col_interesado on col_interesado.t_id =interesado_col_interesado
 		) interesado ON predio.t_id = interesado.unidad_predio
   ) interesados on interesados.t_id = predio.t_id
   where 
