@@ -33,8 +33,16 @@ goto fail
 
 :findJavaFromJavaHome
 set JAVA_HOME=%JAVA_HOME:"=%
-set JAVA_EXE=%JAVA_HOME%/bin/java.exe
 
+@rem Try different java paths
+
+set JAVA_EXE=%JAVA_HOME%\java.exe
+if exist "%JAVA_EXE%" goto init
+
+set JAVA_EXE=%JAVA_HOME%\bin\java.exe
+if exist "%JAVA_EXE%" goto init
+
+set JAVA_EXE=%JAVA_HOME%
 if exist "%JAVA_EXE%" goto init
 
 echo.
