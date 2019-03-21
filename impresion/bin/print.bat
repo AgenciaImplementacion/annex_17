@@ -33,8 +33,19 @@ goto fail
 
 :findJavaFromJavaHome
 set JAVA_HOME=%JAVA_HOME:"=%
-set JAVA_EXE=%JAVA_HOME%/bin/java.exe
 
+set CUSTOM_JAVA_PATH=%8
+set JAVA_EXE="%CUSTOM_JAVA_PATH%"
+if exist "%JAVA_EXE%" goto init
+
+@rem Try different java paths
+set JAVA_EXE=%JAVA_HOME%\java.exe
+if exist "%JAVA_EXE%" goto init
+
+set JAVA_EXE=%JAVA_HOME%\bin\java.exe
+if exist "%JAVA_EXE%" goto init
+
+set JAVA_EXE=%JAVA_HOME%
 if exist "%JAVA_EXE%" goto init
 
 echo.
@@ -71,8 +82,18 @@ set CMD_LINE_ARGS=%$
 
 set CLASSPATH=%APP_HOME%\lib\*
 
+@rem set flags
+set CONFIG=%1
+set CONFIG_VALUE=%2
+
+set SPEC=%3
+set SPEC_VALUE=%4
+
+set OUTPUT=%5
+set OUTPUT_VALUE=%6
+
 @rem Execute print
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %PRINT_OPTS%  -classpath "%CLASSPATH%" org.mapfish.print.cli.Main %CMD_LINE_ARGS%
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %PRINT_OPTS%  -classpath "%CLASSPATH%" org.mapfish.print.cli.Main %CONFIG% %CONFIG_VALUE% %SPEC% %SPEC_VALUE% %OUTPUT% %OUTPUT_VALUE%
 
 :end
 @rem End local scope for the variables with windows NT shell
